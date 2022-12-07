@@ -1,10 +1,9 @@
-from flask import Flask
+from flask import Flask , render_template, request
 
-app = Flask(__name__)
-
-@app.route('/', methods=["GET"])
 # https://lfco2p.deta.dev
 
+app = Flask(__name__)
+@app.route('/', methods=["GET"])
 def hello_world():
     prefix_google = """
 <!-- Google tag (gtag.js) -->
@@ -17,4 +16,15 @@ def hello_world():
   gtag('config', 'UA-250385898-2');
 </script>
 """
-    return prefix_google + "Hello World"
+    return prefix_google + render_template('first.html')+"Hello World"
+
+@app.route('/logger',methods=["GET"])
+def log():
+    
+    return render_template("log.html") + "test"
+
+@app.route('/', methods=['POST'])
+def my_form_post():
+    text = request.form['text']
+    processed_text = text.upper()
+    return processed_text
