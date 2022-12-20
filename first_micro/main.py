@@ -18,10 +18,22 @@ def hello_world():
 """
     return prefix_google + render_template('first.html')+"Hello World"
 
+
+
 @app.route('/logger',methods=["GET"])
-def log():
+def logger_page():
+    page = """
+    <script>
+    console.log('This is a front-end log');
+    </script>
     
-    return render_template("log.html") + "test"
+    <script>
+    alert('Message in a text box');
+    </script>
+    """
+
+    print('This is a back-end log')
+    return page + "This page logs stuff"
 
 @app.route('/', methods=['POST'])
 def my_form_post():
