@@ -40,3 +40,13 @@ def my_form_post():
     text = request.form['text']
     processed_text = text.upper()
     return processed_text
+
+@app.route('/cookie', methods=["GET","POST"])
+def mycookies():
+    req = request.get("https://www.google.com/")
+    return req.cookies.get_dict() 
+
+@app.route('/cookieganalytics', methods=["GET","POST"])
+def mycookieganalytics():
+    req = request.get("https://analytics.google.com/analytics/web/#/report-home/a250385898w345179770p281245720")
+    return req.text
