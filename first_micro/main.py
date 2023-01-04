@@ -1,4 +1,10 @@
+import sys
 from flask import Flask , render_template, request
+from pytrends.request import TrendReq
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
 
 # https://lfco2p.deta.dev
 
@@ -33,6 +39,9 @@ def logger_page():
     """
 
     print('This is a back-end log')
+    app.logger.error("An error message")
+    app.logger.critical("A critical message")
+    print('This is error output', file=sys.stderr)
     return page + "This page logs stuff"
 
 @app.route('/', methods=['POST'])
@@ -50,3 +59,24 @@ def mycookies():
 def mycookieganalytics():
     req = request.get("https://analytics.google.com/analytics/web/#/report-home/a250385898w345179770p281245720")
     return req.text
+
+pytrends = TrendReq(hl='en-US', tz=360)
+# build list of keywords
+kw_list = ["earth", "energy", "space"]
+# build the payload
+pytrends.build_payload(kw_list, timeframe='2015-01-01 2015-03-31', geo='US')
+# store interest over time information in df
+df = pytrends.interest_over_time()
+
+@app.route('/googletrend', methods=["GET","POST"])
+def googletrend():
+# Créer le graphique
+    fig, ax = plt.subplots()
+    ax.bar(df, df.index)
+
+    # Ajouter des titres et des légendes
+    ax.set_ylabel('Population (millions)')
+    ax.set_title('Total Confirmed Cases of COVID in May')
+
+    # Afficher le graphique
+    plt.show()
