@@ -1,8 +1,6 @@
 import sys
 from flask import Flask , render_template, request
 from pytrends.request import TrendReq
-import pandas as pd
-import matplotlib.pyplot as plt
 
 
 
@@ -64,19 +62,13 @@ pytrends = TrendReq(hl='en-US', tz=360)
 # build list of keywords
 kw_list = ["earth", "energy", "space"]
 # build the payload
-pytrends.build_payload(kw_list, timeframe='2015-01-01 2015-03-31', geo='US')
+pytrends.build_payload(kw_list, timeframe='2016-01-01 2016-03-31', geo='US')
 # store interest over time information in df
 df = pytrends.interest_over_time()
-
-@app.route('/googletrend', methods=["GET","POST"])
+print (df)
+@app.route('/googletrend')
 def googletrend():
-# Créer le graphique
-    fig, ax = plt.subplots()
-    ax.bar(df, df.index)
+    line_labels = df.index
+    line_values = df['earth']
+    return render_template('chart.html', title='Earth through time', labels=line_labels, values=line_values)
 
-    # Ajouter des titres et des légendes
-    ax.set_ylabel('Population (millions)')
-    ax.set_title('Total Confirmed Cases of COVID in May')
-
-    # Afficher le graphique
-    plt.show()
